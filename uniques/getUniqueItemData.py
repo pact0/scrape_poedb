@@ -26,19 +26,19 @@ def main():
 
             itemTypeSelector = ".ItemType"
             itemNameSelector = ".ItemName"
+            itemImageSelector = ".itemboximage > img"
+
 
             itemName = itemSiteParse.select_one(itemNameSelector)
             itemType = itemSiteParse.select_one(itemTypeSelector)
+            itemImage = itemSiteParse.select_one(itemImageSelector).attrs["src"]
 
             specificInfoTableCssSelector = ".page-content"
-            rowDict = {'base:': itemType.text, 'name':itemName.text}
+            rowDict = {'base:': itemType.text, 'name':itemName.text, 'icon': itemImage}
             itemSpecificInfoTable = itemSiteParse.select(specificInfoTableCssSelector)
-            for tableItem in itemSpecificInfoTable[0].find_all('td'):
-                if (tableItem.text.find("Art/") != -1):
-                    rowDict.update({'icon': "/".join(tableItem.text.split("/")[2:])})
-                    break
 
             resultDict.update({"{}".format(itemName.text): rowDict})
+
             print(rowDict)
             itemScrapped += 1
 
@@ -58,26 +58,22 @@ def main():
 
         itemTypeSelector = ".ItemType"
         itemNameSelector = ".ItemName"
+        itemImageSelector = ".itemboximage > img"
 
         itemName = itemSiteParse.select_one(itemNameSelector)
         itemType = itemSiteParse.select_one(itemTypeSelector)
+        itemImage = itemSiteParse.select_one(itemImageSelector).attrs["src"]
 
         specificInfoTableCssSelector = ".page-content"
-        rowDict = {'base:': itemType.text, 'name':itemName.text}
+        rowDict = {'base:': itemType.text, 'name':itemName.text, 'icon': itemImage}
         itemSpecificInfoTable = itemSiteParse.select(specificInfoTableCssSelector)
-        for tableItem in itemSpecificInfoTable[0].find_all('td'):
-            if (tableItem.text.find("Art/") != -1):
-                rowDict.update({'icon': tableItem.text})
-                break
 
         resultDict.update({"{}".format(itemName.text): rowDict})
         print(rowDict)
         itemScrapped += 1
 
 
-    with open("outputFile.txt", 'w') as output_file:
-        print(resultDict, file=output_file)
-    with open("outputJson.json", 'w') as json_file:
+    with open("uniqueBases.json", 'w') as json_file:
         print(json.dumps(resultDict), file=json_file)
 
 
